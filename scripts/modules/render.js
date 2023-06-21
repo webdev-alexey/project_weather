@@ -1,35 +1,35 @@
 import { getCurrentDateTime } from "./utils.js";
 
-export const renderWidgetToDay = (widget) => {
-    const currentDateTime = getCurrentDateTime();
+export const renderWidgetToDay = (widget, data) => {
+    const { dayOfMonth, month, year, hours, minutes, dayOfWeek } = getCurrentDateTime();
     
     widget.insertAdjacentHTML(
         'beforeend',
         `
         <div class="widget__today">
             <div class="widget__date-block">
-            <p class="widget__date">${currentDateTime.dayOfMonth} ${currentDateTime.month} ${currentDateTime.year}</p>
-            <p class="widget__time">${currentDateTime.hours}:${currentDateTime.minutes}</p>
-            <p class="widget__day">${currentDateTime.dayOfWeek}</p>
+            <p class="widget__date">${dayOfMonth} ${month} ${year}</p>
+            <p class="widget__time">${hours}:${minutes}</p>
+            <p class="widget__day">${dayOfWeek}</p>
             </div>
             <div class="widget__icon">
-            <img class="widget__img" src="./icon/01d.svg" alt="Погода">
+            <img class="widget__img" src="./icon/${data.weather[0].icon}.svg" alt="Погода">
             </div>
             <div class="widget__wheather">
             <div class="widget__city">
-                <p>Калининград</p>
+                <p>${data.name}</p>
                 <button class="widget__change-city" aria-label="Изменить город"></button>
             </div>
-            <p class="widget__temp-big">19.3°C</p>
+            <p class="widget__temp-big">${(data.main.temp - 273.15).toFixed(2)}°C</p>
             <p class="widget__felt">ощущается</p>
-            <p class="widget__temp-small">18.8 °C</p>
+            <p class="widget__temp-small">${(data.main.feels_like - 273.15).toFixed(2)}°C</p>
             </div>
         </div>
         `
     )
 }
 
-export const renderWidgetOther = (widget) => {
+export const renderWidgetOther = (widget, data) => {
     widget.insertAdjacentHTML(
         'beforeend',
         `
@@ -88,4 +88,9 @@ export const renderWidgetForecast = (widget) => {
         </ul>
         `
     )
+}
+
+export const showError = (widget, error) => {
+    widget.textContent = error.toSting();
+    widget.classList.add('widget_error');
 }
